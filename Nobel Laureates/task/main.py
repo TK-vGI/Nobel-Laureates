@@ -20,11 +20,11 @@ if __name__ == "__main__":
     duplicates = dfLaureates.duplicated(keep=False).sum()
     # print('True' if duplicates != 0 else 'False')
 
-    dfLaureates.dropna(subset=['gender'], inplace=True)
-    dfLaureates.reset_index(drop=True, inplace=True)
-
     dfLaureatesDict = dfLaureates[['country', 'name']][:20]
     # print(dfLaureatesDict.to_dict())
+
+    dfLaureates.dropna(subset=['gender'], inplace=True)
+    dfLaureates.reset_index(drop=True, inplace=True)
 
     """
     2/6: Correct the birthplaces
@@ -40,7 +40,16 @@ if __name__ == "__main__":
         parts = place.split(',')
         return parts[-1].strip() if len(parts) > 1 else None
 
-    dfLaureates['born_in'] = dfLaureates['place_of_birth'].apply(extract_country) # 1
+    # Convert empty strings to NaN
+    dfLaureates['born_in'].replace("", pd.NA, inplace=True)
+
+    # Only update rows where born_in is NaN AND place_of_birth contains a comma
+    mask = dfLaureates['born_in'].isna() & dfLaureates['place_of_birth'].str.contains(',', na=False)
+
+    dfLaureates.loc[mask, 'born_in'] = (
+        dfLaureates.loc[mask, 'place_of_birth'].apply(extract_country)
+    )
+
     # print(dfLaureates.shape)
     # dfLaureates.head(20)
 
@@ -62,5 +71,6 @@ if __name__ == "__main__":
     dfLaureates[cols] = dfLaureates[cols].apply(lambda s: s.str.strip())
     dfLaureates[cols] = dfLaureates[cols].replace(country_map) #4
 
-    list_born_in = dfLaureates['born_in'].to_list() #5
-    print(list_born_in) # 5
+    list_places = dfLaureates['born_in'].to_list()
+    # print(len(list_places))
+    print(list_places) # 5
