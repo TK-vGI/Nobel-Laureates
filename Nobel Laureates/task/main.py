@@ -73,4 +73,25 @@ if __name__ == "__main__":
 
     list_places = dfLaureates['born_in'].to_list()
     # print(len(list_places))
-    print(list_places) # 5
+    # print(list_places) # 5
+
+    """
+    3/6: Correct the dates
+        1. Generate a new column "year_born", representing the year each Nobel Laureate was born.
+        2. Create a new column " age_of_winning", representing the age of winning the prize.
+        3. Output two lists — the year of birth column values and the age of obtaining the prize column values,
+           separated by a new line character ("\n")
+    """
+    # Convert mixed-format dates
+    dfLaureates['date_of_birth'] = pd.to_datetime(dfLaureates['date_of_birth'], format = "mixed")
+
+    # Extract birth year
+    dfLaureates['year_born'] = dfLaureates['date_of_birth'].dt.year
+
+    # Compute age at winning
+    dfLaureates['age_of_winning'] = dfLaureates['year'] - dfLaureates['year_born']
+
+    # Output lists
+    print(dfLaureates['year_born'].to_list(),
+          dfLaureates['age_of_winning'].to_list(),
+          sep='\n')
