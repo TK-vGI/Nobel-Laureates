@@ -14,16 +14,16 @@ if __name__ == "__main__":
     """
     dfLaureates = pd.read_json('data/nobel_laureates.json')
 
-    # print(dfLaureates.axes)
-    # print(dfLaureates.shape)
-    # print(dfLaureates.info())
-    # print(dfLaureates.isna().sum())
+    print(dfLaureates.axes)
+    print(dfLaureates.shape)
+    print(dfLaureates.info())
+    print(dfLaureates.isna().sum())
 
     duplicates = dfLaureates.duplicated(keep=False).sum()
-    # print('True' if duplicates != 0 else 'False')
+    print('True' if duplicates != 0 else 'False')
 
     dfLaureatesDict = dfLaureates[['country', 'name']][:20]
-    # print(dfLaureatesDict.to_dict())
+    print(dfLaureatesDict.to_dict())
 
     dfLaureates.dropna(subset=['gender'], inplace=True)
     dfLaureates.reset_index(drop=True, inplace=True)
@@ -77,8 +77,8 @@ if __name__ == "__main__":
     dfLaureates[cols] = dfLaureates[cols].replace(country_map)  # 4
 
     list_places = dfLaureates['born_in'].to_list()
-    # print(len(list_places))
-    # print(list_places) # 5
+    print(len(list_places))
+    print(list_places) # 5
 
     """
     3/6: Correct the dates
@@ -97,9 +97,9 @@ if __name__ == "__main__":
     dfLaureates['age_of_winning'] = dfLaureates['year'] - dfLaureates['year_born']
 
     # Output lists
-    # print(dfLaureates['year_born'].to_list(),
-    #       dfLaureates['age_of_winning'].to_list(),
-    #       sep='\n')
+    print(dfLaureates['year_born'].to_list(),
+          dfLaureates['age_of_winning'].to_list(),
+          sep='\n')
 
     """
     4/6: Plot a pie chart
@@ -174,3 +174,41 @@ if __name__ == "__main__":
     plt.legend(loc='upper right')
 
     plt.show() # 3
+
+    """
+    6/6: Plot a box plot with whiskers, mean, median
+        1. Add "All categories" to "Category" x-axis  
+        2. Format Figure:
+            figure size: (10, 10)
+            axis font size: 14
+            plot font size: 20
+        4. Box format:
+            showmeans = True, color = green
+            showmedians = True, color = orange
+        3. Show figure
+    """
+    category = ['Chemistry', 'Economics', 'Literature', 'Peace', 'Physics', 'Physiology or Medicine']
+    count = len(category)
+    data = []
+    for i in range(count):
+        data.append(np.array(dfLaureates['age_of_winning'].loc[dfLaureates['category'] == f'{category[i]}'].values))
+
+    tick_labels = ['Chemistry', 'Economics', 'Literature', 'Peace', 'Physics', 'Physiology or Medicine',
+                   'All categories']
+
+    data.append(np.array(dfLaureates['age_of_winning'].values))
+
+    plt.figure(figsize=(10, 10))
+
+    plt.boxplot(data,
+                tick_labels=tick_labels,
+                medianprops={'color': 'orange'},
+                showmeans=True,
+                meanprops={'markerfacecolor': 'green', 'markeredgecolor': 'green'}
+                )
+
+    plt.ylabel('Age of Obtaining the Nobel Prize', fontsize=14)
+    plt.xlabel('Category', fontsize=14)
+    plt.title('Distribution of Ages by Category', fontsize=20)
+
+    plt.show()
