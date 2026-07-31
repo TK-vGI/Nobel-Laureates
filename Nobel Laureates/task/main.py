@@ -138,4 +138,39 @@ if __name__ == "__main__":
 
     # plt.title('Nobel Laureates by Country of Birth')
     plt.show()
-    plt.savefig('Laureates by Country of Birth.png')
+
+    """
+    5/6: Plot a bar plot
+        1. Drop rows where the category column is empty
+        2. Format Figure:
+            figure size: (10, 10)
+            width: 0.4
+            gap: 0.2
+            colors: blue, crimson
+            axis font size: 14
+            plot font size: 20
+        3. Show figure
+    """
+    # 1
+    dfLaureates['category'].replace("", pd.NA, inplace=True)
+    dfLaureates.dropna(subset=['category'], inplace=True)
+
+    #2
+    category = dfLaureates['category'].value_counts().sort_index().index.to_list()
+    females = dfLaureates[['category']].loc[dfLaureates['gender'] == 'female'].value_counts().sort_index().to_list()
+    males = dfLaureates[['category']].loc[dfLaureates['gender'] == 'male'].value_counts().sort_index().to_list()
+
+    x_axis = np.arange(len(category))
+
+    plt.figure(figsize=(10, 10))
+
+    plt.bar(x_axis - 0.2, males, width=0.4, color='blue', label='Males')
+    plt.bar(x_axis + 0.2, females, width=0.4, color='crimson', label='Females')
+
+    plt.xticks(x_axis, category)
+    plt.ylabel('Nobel Laureates Count', fontsize=14)
+    plt.xlabel('Category', fontsize=14)
+    plt.title('The total count of male and female Nobel Prize winners by categories', fontsize=20)
+    plt.legend(loc='upper right')
+
+    plt.show() # 3
