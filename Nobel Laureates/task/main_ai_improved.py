@@ -223,8 +223,6 @@ plt.show()
         - Clean list comprehension: No manual loop with indexing, no repeated `.loc[...]` boilerplate
         - No unnecessary `np.array(...)', '.values` already returns a NumPy array. Wrapping it again is redundant.
         - No duplicated category names in `category = [...]` and `tick_labels = [...]`
-        - Use variables with clearer names: Variable names (categories, males, females) are clearer
-        - Reduce repeated `.sort_index()` calls: `sort_index()` applied once
         - Make the plotting section more compact
 """
 # Categories in sorted order (same as tester expects)
